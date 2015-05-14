@@ -50,20 +50,19 @@ class Hiera
         end
 
         def ec2_instance_tags(ec2_instance_id)
-          tags = @client.list_tags_for_resource(:resource_name => ec2_resource_name(ec2_instance_id))
-          Hash[tags[:tag_list].map { |t| [t[:key], t[:value]] }]
+          tags = @client.describe_tags(:filters => [{ :name => 'resource-id', :values => [ ec2_instance_id ]}])
+          Hash[tags[:tag_set].map { |t| [t[:key], t[:value]] }]
         end
 
         # Prepare EC2 instance data for consumption by Puppet. For Puppet to
         # work, all hash keys have to be converted from symbols to strings.
         def prepare_instance_data(hash)
           {
-            "ec2_instance_identifier" => hash.fetch(:instance_id),
+            "ec2_instance_id" => hash.fetch(:instance_id),
             "ec2_private_dns_name" => hash.fetch(:private_dns_name),
             "ec2_private_ip_address" => hash.fetch(:private_ip_address),
             "ec2_ip_address" => hash.fetch(:ip_address),
             "ec2_instance_tags" => ec2_instance_tags(hash.fetch(:instance_id)),
-            "data" => hash
           }
         end
       end
