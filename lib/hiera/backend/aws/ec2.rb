@@ -62,6 +62,7 @@ class Hiera
             "ec2_private_dns_name" => hash.fetch(:private_dns_name),
             "ec2_private_ip_address" => hash.fetch(:private_ip_address),
             "ec2_ip_address" => hash.fetch(:ip_address),
+            "ec2_instance_tags" => ec2_instance_tags(hash.fetch(:instance_id)),
             "data" => hash
           }
         end
