@@ -28,6 +28,7 @@ class Hiera
               ec2_instances
             end.map do |i|
               i[:instances_set].map do |e|
+                next unless e[:instance_state][:name] =~ /(running|stopped|shutting-down|stopping)/
                 prepare_instance_data(e)
               end
             end
@@ -45,6 +46,7 @@ class Hiera
           tags.each do |tag|
             filters << { :name => 'tag-key', :values => [tag[0]] }
             filters << { :name => 'tag-value', :values => [tag[1]] }
+            filters << { :name => 'instance-state-name', :values => ['running','stopped','shutting-down','stopping'] }
           end
           @client.describe_instances(:filters => filters)[:reservation_set]
         end
