@@ -51,6 +51,11 @@ class Hiera
           Hiera.debug("Using AWS credentials from backend configuration")
           aws_config[:access_key_id] = Config[:aws][:access_key_id]
           aws_config[:secret_access_key] = Config[:aws][:secret_access_key]
+        elsif Config[:aws][:config_file]
+          require "yaml"
+          config_from_file = YAML.load_file( Config[:aws][:config_file] )
+          aws_config[:access_key_id] = config_from_file[:access_key_id]
+          aws_config[:secret_access_key] = config_from_file[:secret_access_key]
         else
           Hiera.debug("Using AWS credentials from environment or IAM role")
         end
