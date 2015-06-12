@@ -28,7 +28,7 @@ class Hiera
               ec2_instances
             end.map do |i|
               i[:instances_set].map do |e|
-                next unless e[:instance_state][:name] =~ /(running|stopped|shutting-down|stopping)/
+                next unless e[:instance_state][:name] =~ /(running|shutting-down|stopping)/
                 prepare_instance_data(e)
               end
             end
